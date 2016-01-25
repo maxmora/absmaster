@@ -1,5 +1,20 @@
 <?php
-  // This shall be the main file that all the pages include. Put all includes that are needed in here.
+  /*
+  This file is part of Absmaster.
+  
+  Absmaster is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  Absmaster is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with Absmaster.  If not, see <http://www.gnu.org/licenses/>.
+  */
 
   // define the backend root directory and the frontend root directories as constants here
   define("BACKEND_ROOT", "/home/chris/Documents/jobs/work_study/abstract_reviewer/absmaster/absmaster_backend");
