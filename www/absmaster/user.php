@@ -1,9 +1,6 @@
 <?php 
   require_once "../../absmaster_backend/absmaster.php";
 
-  // TODO begin by checking if they've even posted who they are; if not, then just display an error
-  // do this by validating here!
-
   $login_error_free = true;
   $login_errors = [];
 

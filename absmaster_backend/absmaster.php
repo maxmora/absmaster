@@ -9,7 +9,14 @@
   // (they should probably be stored as project state properties)
   define("PROJECT_STATE_FILE", BACKEND_ROOT . "/data/project_state.json");
   define("USERS_FILE", BACKEND_ROOT . "/data/users.json");
+  define("USER_LOG", BACKEND_ROOT . '/data/user.log');
+  define("PROJECT_LOG", BACKEND_ROOT . '/data/project.log');
 
+  function log_msg($file,$msg) {
+    $t = DateTime::ISO8601; // format to use for time
+    $line = date($t) . ' ' . $msg . "\n";
+    file_put_contents($file,$line,FILE_APPEND);
+  }
 
   // Class for the project state (interface to info stored across sessions in project_state.json)
   class ProjectState {
@@ -34,7 +41,7 @@
 
     public function write_project_state_data() {
       file_put_contents($this->_project_state_file,$this->_jsonify_project_data());
-      //TODO log writing of data! state what changed?
+      log_msg(PROJECT_LOG,"Project state data written to file \"$this->_project_state_file\"");
     }
 
     public function get_project_name() {
@@ -69,7 +76,7 @@
     private function _jsonify_project_data() {
       $arr = [];
       $arr['project_name'] = $this->_project_name;
-      $arr['signup_enabled'] = $this->_signup_enabled; //FIXME may need special handling for boolean!, though apparently not...
+      $arr['signup_enabled'] = $this->_signup_enabled;
       $arr['max_users'] = $this->_max_users;
       return json_encode($arr);
     }
@@ -90,14 +97,14 @@
         $pin = $this->_generate_user_pin();
       }
       $this->_users[] = new User($first_name,$last_name,$email_address,$pin);
-      // TODO log addition of user
+      log_msg(USER_LOG,"Added user \"$email_address\"");
     }
 
     public function remove_user($email_address) {
       foreach ($this->_users as $k=>$v) {
         if ($v->get_email_address() == $email_address) {
           array_splice($this->_users,$k,1); // remove just this item from $this->_users without leaving a gap in indices
-          // TODO log removal of user
+          log_msg(USER_LOG,"Removed user \"$email_address\"");
         }
       }
     }
@@ -123,7 +130,6 @@
       return $this->_users;
     }
 
-    //FIXME make private and refactor once tested
     public function read_user_data() {
       $foo = json_decode(file_get_contents($this->_users_file),true);
       foreach ($foo as $user) {
@@ -135,6 +141,7 @@
     //FIXME make private and refactor once tested
     public function write_user_data() {
       file_put_contents($this->_users_file,$this->_jsonify_users());
+      log_msg(USER_LOG,"User inventory data written to file \"$this->_users_file\"");
     }
     
     // TODO have this be a sensibly pretty-printed version so that the resulting file can be easily-ish human read?
@@ -206,19 +213,5 @@
   //ProjectState setup
   $projectstate = new ProjectState(PROJECT_STATE_FILE);
   $projectstate->read_project_state_data();
-  
-
-
-  #$fooinv->remove_user('john@smith.com');
-
-  //$fooinv->add_user('Jane','Doe','jane@doe.com',10634);
-  //$fooinv->add_user('John','Smith','john@smith.com',105832);
-  //$fooinv->add_user('Rob','Johnson','rob@johnson.com',205827);
-
-  #$fooinv->write_user_data();
-  #$fooinv->remove_user('john@smith.com');
-
-  //$fooinv->read_user_data();
-  //$fooinv->write_user_data();
   
 
