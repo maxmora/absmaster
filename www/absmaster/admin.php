@@ -5,7 +5,9 @@
   $admin_login_errors = [];
 
   // TODO do login validation and error message appending here!
-  if ($projectstate->admin_email_validate($_POST['email_address']) && $projectstate->admin_pin_validate($_POST['pin'])) {
+  if (empty($_POST)) {
+    $admin_login_errors[] = 'Error: You have not <a href="adminauth.html">logged in</a>.';
+  } elseif ($projectstate->admin_email_validate($_POST['email_address']) && $projectstate->admin_pin_validate($_POST['pin'])) {
     $admin_login_error_free = true;
   } else {
     $admin_login_errors[] = 'Sorry, that is not a valid administrator email/PIN combination.';
@@ -55,7 +57,7 @@
   else:
 
   foreach ($admin_login_errors as $e) {
-    echo $e . "\n";
+    echo $e . "<br>";
   }
 
   endif;

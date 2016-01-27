@@ -11,25 +11,44 @@
 <html>
 
 <?php
-  $new_user_error_free = true;
+  // if someone navigates to this page manually, terminate immediately.
+  if (empty($_POST)) {
+    echo "You cannot access this page.\n</html>";
+    exit();
+    //$new_user_error_free = false;
+    //$user_creation_errors[] = 'You cannot access this page.';
+  }
+
+
+  // validate fields for new user
+  $user_fields_valid = true;
   $user_creation_errors = [];
 
-  //TODO also check for input validity in here! (setting value for $new_user_error_free and appending to $user_creation_errors
+  if ($_POST['first_name'] == '') {
+    $user_fields_valid = false;
+    $user_creation_errors[] = 'Empty first name.';
+  }
+  if ($_POST['last_name'] == '') {
+    $user_fields_valid = false;
+    $user_creation_errors[] = 'Empty last name.';
+  }
+  if (filter_var($_POST['email_address'],FILTER_VALIDATE_EMAIL) == false) {
+    $user_fields_valid = false;
+    $user_creation_errors[] = 'Invalid email address.';
+  }
+  if ($userinventory->user_exists_by_email_address($_POST['email_address'])) {
+    $user_fields_valid = false;
+    $user_creation_errors[] = 'A user with that email address already exists.';
+  }
 
-  // if someone navigates to this page manually
-  if (empty($_POST)) {
-    $new_user_error_free = false;
-    $user_creation_errors[] = 'You cannot access this page.';
-  } elseif ($userinventory->user_exists_by_email_address($_POST['email_address']) == false) {
+  // create user and save data
+  if ($user_fields_valid) {
     $userinventory->add_user($_POST['first_name'],$_POST['last_name'],$_POST['email_address']);
     $thenewuser = $userinventory->get_user_by_email_address($_POST['email_address']); // grabbing the new user object for use below
     $userinventory->write_user_data();
-  } else {
-    $new_user_error_free = false;
-    $user_creation_errors[] = 'A user with that email address "' . $_POST['email_address'] . '" already exists.';
   }
 
-  if ($new_user_error_free == true):
+  if ($user_fields_valid == true):
 ?> 
 
   You have been added as a new user!
@@ -59,9 +78,10 @@
   <p>You can now log in <a href="login.html">here</a>.</p>
 
 <?php else: 
+  echo '<h1> Error(s)!</h1>';
 
   foreach ($user_creation_errors as $e) {
-    echo $e . "\n";
+    echo $e . "<br>";
   }
 
 ?>
