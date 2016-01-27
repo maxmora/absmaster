@@ -21,12 +21,28 @@
 
   <h1>Absmaster User Page</h1>
 
-  Welcome <?php echo $the_user->get_first_name() . ' ' . $the_user->get_last_name(); ?>!
+  <p>
+    Welcome <?php echo $the_user->get_first_name() . ' ' . $the_user->get_last_name(); ?>!
+  </p>
+
+  <h2>Paper/abstract upload</h2>
+
+  <form action="upload.php" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="MAX_FILE_SIZE" value=5000000>
+    <input type="hidden" name="email_address" value="<?php echo $the_user->get_email_address();?>">
+
+    Title of paper:
+    <input name="paper_title" type="text">
+    <br>
+    File to upload:
+    <input name="uploaded_file" type="file">
+    <br>
+    <input type="submit" value="Upload File">
+  </form>
 
 
-  (here is where the user content will be)
 
-  <?php
+  <?php // USER LOGIN ERRORS
     else:
     foreach ($login_errors as $e) {
       echo $e . "<br>";
