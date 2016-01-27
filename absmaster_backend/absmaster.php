@@ -43,6 +43,10 @@
     private $_signup_enabled = true;
     private $_max_users = 50;
 
+    // TODO default these to empty and have them be assigned in the initial project state on new project creation 
+    private $_admin_email = '';
+    private $_admin_pin = '';
+
     public function __construct($projstatefile) {
       $this->_project_state_file = $projstatefile;
     }
@@ -52,11 +56,21 @@
       $this->_project_name = $pdata['project_name'];
       $this->_signup_enabled = $pdata['signup_enabled'];
       $this->_max_users = $pdata['max_users'];
+      $this->_admin_email = $pdata['admin_email'];
+      $this->_admin_pin = $pdata['admin_pin'];
     }
 
     public function write_project_state_data() {
       file_put_contents($this->_project_state_file,$this->_jsonify_project_data());
       log_msg(PROJECT_LOG,"Project state data written to file \"$this->_project_state_file\"");
+    }
+
+    public function admin_email_validate($e) {
+      return $this->_admin_email == $e;
+    }
+
+    public function admin_pin_validate($p) {
+      return $this->_admin_pin == $p;
     }
 
     public function get_project_name() {
@@ -71,6 +85,9 @@
       return $this->_signup_enabled;
     }
 
+    public function get_admin_email() {
+      return $this->_admin_email;
+    }
 
     public function set_project_name($name) {
       $this->_project_name = $name;
@@ -93,6 +110,8 @@
       $arr['project_name'] = $this->_project_name;
       $arr['signup_enabled'] = $this->_signup_enabled;
       $arr['max_users'] = $this->_max_users;
+      $arr['admin_email'] = $this->_admin_email;
+      $arr['admin_pin'] = $this->_admin_pin;
       return json_encode($arr);
     }
   }

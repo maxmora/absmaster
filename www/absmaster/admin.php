@@ -1,10 +1,15 @@
 <?php 
   require_once "../../absmaster_backend/absmaster.php";
 
-  $admin_login_error_free = true;
+  $admin_login_error_free = false;
   $admin_login_errors = [];
 
   // TODO do login validation and error message appending here!
+  if ($projectstate->admin_email_validate($_POST['email_address']) && $projectstate->admin_pin_validate($_POST['pin'])) {
+    $admin_login_error_free = true;
+  } else {
+    $admin_login_errors[] = 'Sorry, that is not a valid administrator email/PIN combination.';
+  }
 
   if ($admin_login_error_free == true):
 
