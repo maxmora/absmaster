@@ -143,6 +143,15 @@
       }
     }
 
+    public function set_user_uploaded_paper_by_email_address($email_address,$id,$title) {
+      foreach ($this->_users as $k=>$v) {
+        if ($v->get_email_address() == $email_address) {
+          $v->set_uploaded_paper($id,$title);
+          break;
+        }
+      }
+    }
+
     public function get_user_by_email_address($email_address) {
       foreach ($this->_users as $k=>$v) {
         if ($v->get_email_address() == $email_address) {
@@ -164,10 +173,21 @@
       return $this->_users;
     }
 
+    public function get_used_paper_ids() {
+      $ids = [];
+      foreach ($this->_users as $u) {
+        $p = $u->get_uploaded_paper();
+        if ($p) {
+          $ids[] = $p['id'];
+        }
+      }
+      return $ids;
+    }
+
     public function read_user_data() {
-      $foo = json_decode(file_get_contents($this->_users_file),true);
-      foreach ($foo as $user) {
-        $this->_users[] = new User ($user['first_name'],$user['last_name'],$user['email_address'],$user['pin']);
+      $user_data = json_decode(file_get_contents($this->_users_file),true);
+      foreach ($user_data as $u) {
+        $this->_users[] = new User ($u['first_name'],$u['last_name'],$u['email_address'],$u['pin'],$u['uploaded_paper'],$u['submitted_reviews']);
       }
     }
     
@@ -182,14 +202,6 @@
     private function _jsonify_users() {
       return json_encode($this->_arrayify_user_list($this->_users));
     }
-
-    private function _generate_user_pin($length=6) {
-      $new_pin = '';
-      for ($i = 0; $i < $length; $i++) {
-        $new_pin .= rand(0,9);
-      }
-      return $new_pin;
-    }
     
     private function _arrayify_user_list($user_list) {
       $arr = [];
@@ -197,6 +209,14 @@
         $arr[] = $u->arrayify_user();
       }
       return $arr;
+    }
+
+    private function _generate_user_pin($length=6) {
+      $new_pin = '';
+      for ($i = 0; $i < $length; $i++) {
+        $new_pin .= rand(0,9);
+      }
+      return $new_pin;
     }
   }
 
@@ -206,6 +226,18 @@
     private $_last_name;
     private $_email_address;
     private $_pin;
+
+    private $_uploaded_paper = null;
+    private $_submitted_reviews = [];
+
+    public function __construct($first_name,$last_name,$email_address,$pin,$uploaded_paper=null,$submitted_reviews=[]) {
+      $this->_first_name = $first_name;
+      $this->_last_name = $last_name;
+      $this->_email_address = $email_address;
+      $this->_pin = $pin;
+      $this->_uploaded_paper = $uploaded_paper;
+      $this->_submitted_reviews= $submitted_reviews;
+    }
 
     public function get_first_name() {
       return $this->_first_name;
@@ -223,11 +255,12 @@
       return $this->_pin;
     }
 
-    public function __construct($first_name,$last_name,$email_address,$pin) {
-      $this->_first_name = $first_name;
-      $this->_last_name = $last_name;
-      $this->_email_address = $email_address;
-      $this->_pin = $pin;
+    public function get_uploaded_paper() {
+      return $this->_uploaded_paper;
+    }
+
+    public function get_submitted_reviews() {
+      return $this->_submitted_reviews;
     }
     
     public function arrayify_user() {
@@ -236,13 +269,22 @@
       $arr['last_name'] = $this->_last_name;
       $arr['email_address'] = $this->_email_address;
       $arr['pin'] = $this->_pin;
+      $arr['uploaded_paper'] = $this->_uploaded_paper;
+      $arr['submitted_reviews'] = $this->_submitted_reviews;
       return $arr;
+    }
+
+    public function set_uploaded_paper($id,$title) {
+      $this->_uploaded_paper = ['id'=>$id,'title'=>$title];
     }
   }
 
   //UserInventory setup
   $userinventory = new UserInventory(USERS_FILE);
   $userinventory->read_user_data();
+
+  //$userinventory->set_user_uploaded_paper_by_email_address('chris@smith.com',3,'on languages');
+
 
   //ProjectState setup
   $projectstate = new ProjectState(PROJECT_STATE_FILE);
