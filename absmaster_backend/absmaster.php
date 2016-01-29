@@ -283,8 +283,6 @@
   $userinventory = new UserInventory(USERS_FILE);
   $userinventory->read_user_data();
 
-  //$userinventory->set_user_uploaded_paper_by_email_address('chris@smith.com',3,'on languages');
-
 
   //ProjectState setup
   $projectstate = new ProjectState(PROJECT_STATE_FILE);

@@ -25,6 +25,21 @@
     Welcome <?php echo $the_user->get_first_name() . ' ' . $the_user->get_last_name(); ?>!
   </p>
 
+  <h2>Uploaded files</h2>
+
+  <p>
+    <?php
+      $upload = $the_user->get_uploaded_paper();
+      if ($upload) {
+        echo 'You have uploaded a paper titled "' . $the_user->get_uploaded_paper()['title'] . '".';
+        $paper_submission_disabled_string = ' disabled'; // so users can't submit if they already have; this should probably be validated on the backend as well
+      } else {
+        echo 'You have not uploaded a paper yet.';
+        $paper_submission_disabled_string = '';
+      }
+    ?>
+  </p>
+
   <h2>Paper/abstract upload</h2>
 
   <form action="upload.php" method="post" enctype="multipart/form-data">
@@ -35,9 +50,9 @@
     <input name="paper_title" type="text">
     <br>
     File to upload:
-    <input name="uploaded_file" type="file">
+    <input name="uploaded_file" type="file"<?php echo $paper_submission_disabled_string;?>>
     <br>
-    <input type="submit" value="Upload File">
+    <input type="submit" value="Upload File"<?php echo $paper_submission_disabled_string;?>>
   </form>
 
 
