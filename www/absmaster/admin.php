@@ -29,7 +29,11 @@
     "    <td>" . "Number of submitted reviews" . "</td>\n" .
     "  </tr>\n";
     foreach ($users as $u) {
-      if ($u->get_uploaded_paper()) { $has_uploaded = '"' . $u->get_uploaded_paper()['title'] . '"'; } else { $has_uploaded = '(none)'; }
+      if ($u->get_uploaded_paper()) {
+        $has_uploaded = '"<a href="' . 'downloadpaper.php?id=' . $u->get_uploaded_paper()['id'] . '">' . $u->get_uploaded_paper()['title'] . '</a>"';
+      } else {
+        $has_uploaded = '(none)';
+      }
       $table_string .=
       "  <tr>\n" .
       "    <td>" . $u->get_first_name() . "</td>\n" .
