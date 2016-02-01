@@ -116,7 +116,7 @@
     }
   }
 
-  // Class for list of users; needs a method to add to that list
+  // Class for list of users
   class UserInventory {
     private $_users;
     private $_users_file;

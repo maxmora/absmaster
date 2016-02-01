@@ -1,4 +1,5 @@
 <?php 
+  session_start();
   require_once "../../absmaster_backend/absmaster.php";
 
   $admin_login_error_free = false;
@@ -14,6 +15,9 @@
   }
 
   if ($admin_login_error_free == true):
+
+  // login is successful
+  $_SESSION['admin_pin'] = $_POST['pin'];
 
   function generate_user_table($user_inv) {
     $users = $user_inv->get_users();
@@ -55,14 +59,21 @@
   <h1>Absmaster Project Administration</h1>
 
 
+  <h2>Users</h2>
   The following users are currently in the system:
 
   <p>
   <?php echo generate_user_table($userinventory); ?>
   </p>
+
+
+  <a href="assignreviewers.php">Assign reviewers to students</a>
+
 </html>
 
-<?php
+
+
+<?php // messages printed if login failed
   else:
 
   foreach ($admin_login_errors as $e) {
