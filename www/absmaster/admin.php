@@ -19,6 +19,10 @@
   // login is successful
   $_SESSION['admin_pin'] = $_POST['pin'];
 
+  function generate_paper_download_link($user) {
+    return '"<a href="' . 'downloadpaper.php?id=' . $user->get_uploaded_paper()['id'] . '">' . $user->get_uploaded_paper()['title'] . '</a>"';
+  }
+
   function generate_user_table($user_inv) {
     $users = $user_inv->get_users();
     $table_string = '';
@@ -34,7 +38,7 @@
     "  </tr>\n";
     foreach ($users as $u) {
       if ($u->get_uploaded_paper()) {
-        $has_uploaded = '"<a href="' . 'downloadpaper.php?id=' . $u->get_uploaded_paper()['id'] . '">' . $u->get_uploaded_paper()['title'] . '</a>"';
+        $has_uploaded = generate_paper_download_link($u);
       } else {
         $has_uploaded = '(none)';
       }

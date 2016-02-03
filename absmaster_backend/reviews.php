@@ -31,6 +31,19 @@
     log_msg(PROJECT_LOG,'Reviewer assignments written to file "' . REVIEWER_ASSIGNMENTS_FILE .'"');
   }
 
+  // walk through hash table of authors=>reviewers looking for reviewer by email address, return the emails of the paper(s) reviewer must review
+  function compile_papers_for_reviewer_by_email_address($reviewer_assignments,$email) {
+    $papers = [];
+    foreach ($reviewer_assignments as $author => $reviewers) {
+      foreach ($reviewers as $r) {
+        if ($r == $email) {
+          $papers[] = $author;
+        }
+      }
+    }
+    return $papers;
+  }
+
   function read_reviewer_exclusions() {
     // TODO implement
   }
@@ -38,6 +51,9 @@
   function write_reviewer_exclusions() {
     // TODO implement
   }
+
+
+
 
   function reviewer_is_allowed_for_author($author,$reviewer,$exclusions) {
     if (isset($exclusions[$author])) {
@@ -47,7 +63,6 @@
     }
     return true;
   }
-
 
   function compile_valid_reviewers($author,$list_of_users,$excluded_reviewer_list) {
     $non_author_users = $list_of_users;
