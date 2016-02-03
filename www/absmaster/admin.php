@@ -1,6 +1,7 @@
 <?php 
   session_start();
   require_once "../../absmaster_backend/absmaster.php";
+  require_once "../../absmaster_backend/reviews.php";
 
   $admin_login_error_free = false;
   $admin_login_errors = [];
@@ -56,6 +57,42 @@
     $table_string .= "</table>\n";
     return $table_string;
   }
+
+  function generate_reviewer_assignment_table($review_list,$user_inv) {
+
+    function string_of_reviewers($user,$review_list,$user_inv) {
+      $reviewer_string = '';
+      foreach ($review_list[$user->get_email_address()] as $r) {
+        $rev_user = $user_inv->get_user_by_email_address($r);
+        $reviewer_string = $reviewer_string . $rev_user->get_first_name() . ' ' . $rev_user->get_last_name() . ' (' . $rev_user->get_email_address() . '), ';
+      }
+      return $reviewer_string;
+    }
+    $users = $user_inv->get_users();
+    $table_string = '';
+    $table_string .=
+    "<table>\n" .
+    "  <tr>\n" .
+    "    <td>" . "First name" . "</td>\n" .
+    "    <td>" . "Last name" . "</td>\n" .
+    "    <td>" . "Email address" . "</td>\n" .
+    "    <td>" . "Uploaded paper" . "</td>\n" .
+    "    <td>" . "Reviewers" . "</td>\n" .
+    "  </tr>\n";
+    foreach ($users as $u) {
+      $table_string .=
+      "  <tr>\n" .
+      "    <td>" . $u->get_first_name() . "</td>\n" .
+      "    <td>" . $u->get_last_name() . "</td>\n" .
+      "    <td>" . $u->get_email_address() . "</td>\n" .
+      "    <td>" . '"' . $u->get_uploaded_paper()['title'] . '"' . "</td>\n" .
+      "    <td>" . string_of_reviewers($u,$review_list,$user_inv) . "</td>\n" .
+      "  </tr>\n";
+    }
+    $table_string .= "</table>\n";
+    return $table_string;
+  }
+
 ?>
 
 <html>
@@ -73,11 +110,38 @@
 
   <h2>Reviewer Assignment</h2>
 
+  <p>
+  <?php // don't allow assignment of reviewers if everyone hasn't uploaded a paper
+    $disable_review_assignments_string = '';
+    $papers_not_all_uploaded_yet = false;
+    foreach ($userinventory->get_users() as $u) {
+      if ($u->get_uploaded_paper() == false) {
+        $disable_review_assignments_string = ' disabled';
+        $papers_not_all_uploaded_yet = true;
+      }
+    }
+
+    if ($papers_not_all_uploaded_yet) {
+      echo "Papers have not yet been uploaded by all students. Distribution of papers to reviewers disabled.";
+    }
+
+  ?>
+  </p>
+
+  <p>
   <form action="assignreviewers.php" method="get">
     <p>Papers to be reviewed per student:</p>
-    <p><input type="number" name="num_reviews"></p>
-    <input type="submit" value="Assign Reviewers">
+    <p><input type="number" name="num_reviews"<?php echo $disable_review_assignments_string;?>></p>
+    <input type="submit" value="Assign Reviewers"<?php echo $disable_review_assignments_string;?>>
   </form>
+  </p>
+
+  <?php
+    if (file_exists(REVIEWER_ASSIGNMENTS_FILE)) {
+      echo "<p>\nThe current reviewer assignments are as follows:\n</p>";
+      echo "<p>\n" . generate_reviewer_assignment_table(read_reviewer_assignments(),$userinventory) . "\n</p>";
+    }
+  ?>
 
 </html>
 

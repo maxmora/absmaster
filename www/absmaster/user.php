@@ -63,7 +63,6 @@
 
     <p>
     <?php
-      // TODO do this only if reviewer pair file exists; otherwise just say they aren't ready yet
       if (file_exists(REVIEWER_ASSIGNMENTS_FILE)) {
         $revs = read_reviewer_assignments();
         $papers_for_the_user = compile_papers_for_reviewer_by_email_address($revs,$the_user->get_email_address());

@@ -28,7 +28,5 @@
 <html>
   <h1>File upload successful!</h1>
 
-  your email is <?php echo $the_user->get_email_address();?>
-
   <p>Your file "<?php echo $_POST['paper_title'];?>" has successfully been uploaded.</p>
 </html>
