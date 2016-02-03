@@ -8,9 +8,6 @@
 
   require_once "../../absmaster_backend/reviews.php";
 
-  // TODO get these from user input
-  $reviews_per_user = 2;
-
   // TODO implement gathering of these
   $excluded_reviewers = []; // when implemented, this will be a hash table of reviewer => [exclusions]
 
@@ -19,6 +16,13 @@
   foreach ($userinventory->get_users() as $u) {
     $users[] = $u->get_email_address();
   }
+
+  $reviews_per_user = $_GET['num_reviews'];
+  // prevent greater number of reviews than there are papers to review
+  if ($reviews_per_user > count($users)-1) {
+    $reviews_per_user = count($users)-1;
+  }
+
 
   // TODO this whole thing should only be operating on people who have submitted reviews; check for this when having admin assign reviewers?
   $review_pairings = assign_reviewers($users,$reviews_per_user,$excluded_reviewers);
@@ -70,7 +74,14 @@
   </p>
 
   <p>
-    You can refresh the page to re-assign. Click the button below to distribute papers to reviewers when you are satisfied.
+    <a href="assignreviewers.php?num_reviews=<?php echo $reviews_per_user; ?>">Click here</a> to re-assign reviewers. Click the button below to distribute papers to reviewers when you are satisfied.
   </p>
+
+  <form action="distributepapers.php" method="post">
+    <input type="hidden" name="reviewer_assignments" value="<?php echo htmlentities(json_encode($review_pairings));?>">
+    <input type="submit" value="Distribute Papers">
+  </form>
+
+  
 
 </html>

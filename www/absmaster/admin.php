@@ -67,7 +67,13 @@
   </p>
 
 
-  <a href="assignreviewers.php">Assign reviewers to students</a>
+  <h2>Reviewer Assignment</h2>
+
+  <form action="assignreviewers.php" method="get">
+    <p>Papers to be reviewed per student:</p>
+    <p><input type="number" name="num_reviews"></p>
+    <input type="submit" value="Assign Reviewers">
+  </form>
 
 </html>
 

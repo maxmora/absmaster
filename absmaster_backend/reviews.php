@@ -19,7 +19,17 @@
   require_once "absmaster.php";
 
 
-  define("REVIEWER_EXCLUSIONS", BACKEND_ROOT . '/data/excluded_reviewers.json');
+  define("REVIEWER_ASSIGNMENTS_FILE", BACKEND_ROOT . '/data/assigned_reviewers.json');
+  define("REVIEWER_EXCLUSIONS_FILE", BACKEND_ROOT . '/data/excluded_reviewers.json');
+
+  function read_reviewer_assignments() {
+    return json_decode(file_get_contents(REVIEWER_ASSIGNMENTS_FILE),true);
+  }
+
+  function write_reviewer_assignments($rev_assignments_json) {
+    file_put_contents(REVIEWER_ASSIGNMENTS_FILE,$rev_assignments_json);
+    log_msg(PROJECT_LOG,'Reviewer assignments written to file "' . REVIEWER_ASSIGNMENTS_FILE .'"');
+  }
 
   function read_reviewer_exclusions() {
     // TODO implement
