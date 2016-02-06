@@ -152,6 +152,15 @@
       }
     }
 
+    public function add_user_submitted_review_by_email_address($email_address,$author_email,$review_id) {
+      foreach ($this->_users as $k=>$v) {
+        if ($v->get_email_address() == $email_address) {
+          $v->add_submitted_review($author_email,$review_id);
+          break;
+        }
+      }
+    }
+
     public function get_user_by_email_address($email_address) {
       foreach ($this->_users as $k=>$v) {
         if ($v->get_email_address() == $email_address) {
@@ -182,6 +191,31 @@
         }
       }
       return $ids;
+    }
+
+    public function get_used_review_ids() {
+      $ids = [];
+      foreach ($this->_users as $u) {
+        $reviews = $u->get_submitted_reviews();
+        if ($reviews) {
+          foreach ($reviews as $a_email=>$revid) {
+            $ids[] = $revid;
+          }
+        }
+      }
+      return $ids;
+    }
+
+    // allows lookup of author emails by paper ID
+    public function get_paper_ids_and_author_emails() {
+      $ids_and_emails = [];
+      foreach ($this->_users as $u) {
+        $p = $u->get_uploaded_paper();
+        if ($p) {
+          $ids_and_emails[$p['id']] = $u->get_email_address();
+        }
+      }
+      return $ids_and_emails;
     }
 
     public function read_user_data() {
@@ -261,6 +295,10 @@
 
     public function get_submitted_reviews() {
       return $this->_submitted_reviews;
+    }
+
+    public function add_submitted_review($author_email,$review_id) {
+      $this->_submitted_reviews[$author_email] = $review_id;
     }
     
     public function arrayify_user() {

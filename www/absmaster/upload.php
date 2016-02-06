@@ -7,11 +7,8 @@
 
   // TODO: 
   //   -do some validation: they entered a title, must be .pdf (preferably a real check, not just extension), not over max size
-  //   -name as integer ID and store index of all those IDs by user (need model for this)
   $SUBMISSION_DIR = BACKEND_ROOT . '/submissions/';
   $the_user = $userinventory->get_user_by_email_address($_POST['email_address']);
-
-  // generate uniq id for paper, assign id and title to user, and write user data
 
   // generate unique id; should probably be encapsulated elsewhere
   $used_ids = $userinventory->get_used_paper_ids();

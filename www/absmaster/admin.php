@@ -24,6 +24,10 @@
     return '"<a href="' . 'downloadpaper.php?id=' . $user->get_uploaded_paper()['id'] . '">' . $user->get_uploaded_paper()['title'] . '</a>"';
   }
 
+  function generate_review_download_link($rev_id,$link_text) {
+    return '<a href="' . 'downloadreview.php?id=' . $rev_id . '">' . $link_text . '</a>';
+  }
+
   function generate_user_table($user_inv) {
     $users = $user_inv->get_users();
     $table_string = '';
@@ -64,7 +68,12 @@
       $reviewer_string = '';
       foreach ($review_list[$user->get_email_address()] as $r) {
         $rev_user = $user_inv->get_user_by_email_address($r);
-        $reviewer_string = $reviewer_string . $rev_user->get_first_name() . ' ' . $rev_user->get_last_name() . ' (' . $rev_user->get_email_address() . '), ';
+        $rev_user_string = $rev_user->get_first_name() . ' ' . $rev_user->get_last_name() . ' (' . $rev_user->get_email_address() . ')';
+        // show name as download link to review if the review has been submitted
+        if (isset($rev_user->get_submitted_reviews()[$user->get_email_address()])) {
+          $rev_user_string = generate_review_download_link($rev_user->get_submitted_reviews()[$user->get_email_address()],$rev_user_string);
+        }
+        $reviewer_string = $reviewer_string . $rev_user_string . ', ';
       }
       return $reviewer_string;
     }
@@ -101,6 +110,7 @@
 
 
   <h2>Users</h2>
+
   The following users are currently in the system:
 
   <p>
@@ -130,7 +140,7 @@
 
   <p>
   <form action="assignreviewers.php" method="get">
-    <p>Papers to be reviewed per student:</p>
+    <p>Number of papers to be reviewed per student:</p>
     <p><input type="number" name="num_reviews"<?php echo $disable_review_assignments_string;?>></p>
     <input type="submit" value="Assign Reviewers"<?php echo $disable_review_assignments_string;?>>
   </form>
@@ -142,6 +152,12 @@
       echo "<p>\n" . generate_reviewer_assignment_table(read_reviewer_assignments(),$userinventory) . "\n</p>";
     }
   ?>
+
+
+  <h2>Review Distribution</h2>
+
+  Implement this!
+
 
 </html>
 
