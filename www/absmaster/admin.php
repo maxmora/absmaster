@@ -6,8 +6,10 @@
   $admin_login_error_free = false;
   $admin_login_errors = [];
 
-  // TODO do login validation and error message appending here!
-  if (empty($_POST)) {
+  // session and/or login validation
+  if ($projectstate->admin_pin_validate($_SESSION['admin_pin'])) {
+    $admin_login_error_free = true;
+  } elseif (empty($_POST)) {
     $admin_login_errors[] = 'Error: You have not <a href="adminauth.html">logged in</a>.';
   } elseif ($projectstate->admin_email_validate($_POST['email_address']) && $projectstate->admin_pin_validate($_POST['pin'])) {
     $admin_login_error_free = true;
@@ -17,7 +19,7 @@
 
   if ($admin_login_error_free == true):
 
-  // login is successful
+  // login is successful; save this to $_SESSION
   $_SESSION['admin_pin'] = $_POST['pin'];
 
   function generate_paper_download_link($user) {
@@ -132,7 +134,7 @@
     }
 
     if ($papers_not_all_uploaded_yet) {
-      echo "Papers have not yet been uploaded by all students. Distribution of papers to reviewers disabled.";
+      echo "Papers have not yet been uploaded by all authors. Distribution of papers to reviewers disabled.";
     }
 
   ?>
@@ -140,7 +142,7 @@
 
   <p>
   <form action="assignreviewers.php" method="get">
-    <p>Number of papers to be reviewed per student:</p>
+    <p>Number of papers to be reviewed per author:</p>
     <p><input type="number" name="num_reviews"<?php echo $disable_review_assignments_string;?>></p>
     <input type="submit" value="Assign Reviewers"<?php echo $disable_review_assignments_string;?>>
   </form>
@@ -156,7 +158,41 @@
 
   <h2>Review Distribution</h2>
 
-  Implement this!
+  <?php
+    // not elegant: how many reviews are we supposed to have? check how many the first user is supposed to have * how many users we have
+    $total_expected_reviews = count(read_reviewer_assignments()[$userinventory->get_users()[0]->get_email_address()]) * count($userinventory->get_users());
+    $total_received_reviews = 0;
+    foreach ($userinventory->get_users() as $u) {
+      $total_received_reviews += count($u->get_submitted_reviews());
+    }
+  ?>
+
+  <p><?php echo $total_received_reviews . ' out of ' . $total_expected_reviews;?> have been submitted so far.</p>
+
+  <p>
+    <?php
+      $reviews_awaited = $total_expected_reviews - $total_received_reviews;
+      if ($reviews_awaited > 0) {
+        echo '<b>Note: Reviews submitted after distribution is enabled (still waiting on ' . $reviews_awaited . ' more) will immediately be viewable by authors without your approval.</b>';
+      }
+    ?>
+  </p>
+  
+  <?php
+    $revs_on_string = '';
+    $revs_off_string = '';
+    if ($projectstate->get_reviews_available_status()) {
+      $revs_on_string = ' checked';
+    } else {
+      $revs_off_string = ' checked';
+    }
+  ?>
+
+  <form action="changereviewavailability.php" method="post">
+    <input type="radio" name="review_availability" value="disable"<?php echo $revs_off_string;?>> Reviews NOT available to authors<br>
+    <input type="radio" name="review_availability" value="enable"<?php echo $revs_on_string;?>> Reviews available to authors<br>
+    <input type="submit" value="Change review availability">
+  </form>
 
 
 </html>

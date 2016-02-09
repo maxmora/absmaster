@@ -41,6 +41,7 @@
     // trying for sensible defaults
     private $_project_name = '';
     private $_signup_enabled = true;
+    private $_reviews_available = false;
     private $_max_users = 50;
 
     // TODO default these to empty and have them be assigned in the initial project state on new project creation 
@@ -55,6 +56,7 @@
       $pdata = json_decode(file_get_contents($this->_project_state_file),true);
       $this->_project_name = $pdata['project_name'];
       $this->_signup_enabled = $pdata['signup_enabled'];
+      $this->_reviews_available = $pdata['reviews_available'];
       $this->_max_users = $pdata['max_users'];
       $this->_admin_email = $pdata['admin_email'];
       $this->_admin_pin = $pdata['admin_pin'];
@@ -85,6 +87,10 @@
       return $this->_signup_enabled;
     }
 
+    public function get_reviews_available_status() {
+      return $this->_reviews_available;
+    }
+
     public function get_admin_email() {
       return $this->_admin_email;
     }
@@ -101,6 +107,14 @@
       $this->_signup_enabled = false;
     }
 
+    public function enable_reviews_available() {
+      $this->_reviews_available = true;
+    }
+
+    public function disable_reviews_available() {
+      $this->_reviews_available = false;
+    }
+
     public function set_max_users($n) {
       $this->_max_users = $n;
     }
@@ -109,6 +123,7 @@
       $arr = [];
       $arr['project_name'] = $this->_project_name;
       $arr['signup_enabled'] = $this->_signup_enabled;
+      $arr['reviews_available'] = $this->_reviews_available;
       $arr['max_users'] = $this->_max_users;
       $arr['admin_email'] = $this->_admin_email;
       $arr['admin_pin'] = $this->_admin_pin;
@@ -313,7 +328,7 @@
     }
 
     public function set_uploaded_paper($id,$title) {
-      $this->_uploaded_paper = ['id'=>$id,'title'=>$title];
+      $this->_uploaded_paper = ['id'=>$id, 'title'=>$title];
     }
   }
 

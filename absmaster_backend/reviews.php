@@ -138,8 +138,4 @@
     return $authors_and_their_reviewers;
   }
 
-  
-  function distribute_papers_to_reviewers($rev_list,$user_inv) {
-    // TODO implement
-  } 
 
