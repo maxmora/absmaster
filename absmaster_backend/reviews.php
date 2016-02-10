@@ -79,22 +79,6 @@
     return $valid_reviewers;
   }
 
-  // used in assign_reviewers_alt(), not currently implemented
-  function compile_valid_reviewees($reviewer,$list_of_users,$excluded_reviewer_list) {
-    $non_reviewer_users = $list_of_users;
-    // remove this reviwer; you can't review yourself
-    $index = array_search($reviewer,$non_reviewer_users);
-    array_splice($non_reviewer_users,$index,1);
-
-    $valid_reviewees = [];
-    foreach ($non_reviewer_users as $u) {
-      if (reviewer_is_allowed_for_author($u,$reviewer,$excluded_reviewer_list)) {
-        $valid_reviewees[] = $u;
-      }
-    }
-    return $valid_reviewees;
-  }
-
 
   // excluded review list should be a hash of emails => emails that shouldn't review it
   function assign_reviewers($users,$reviews_per_user,$excluded_reviewer_list) {

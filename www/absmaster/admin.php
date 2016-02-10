@@ -7,7 +7,7 @@
   $admin_login_errors = [];
 
   // session and/or login validation
-  if ($PROJECTSTATE->admin_pin_validate($_SESSION['admin_pin'])) {
+  if (isset($_SESSION['admin_pin']) || $PROJECTSTATE->admin_pin_validate($_SESSION['admin_pin'])) {
     $admin_login_error_free = true;
   } elseif (empty($_POST)) {
     $admin_login_errors[] = 'Error: You have not <a href="adminauth.html">logged in</a>.';
@@ -19,8 +19,10 @@
 
   if ($admin_login_error_free == true):
 
-  // login is successful; save this to $_SESSION
-  $_SESSION['admin_pin'] = $_POST['pin'];
+  // login is successful and we've just gotten a new pin from logging in, save this to $_SESSION
+  if (isset($_POST['pin'])) {
+    $_SESSION['admin_pin'] = $_POST['pin'];
+  }
 
   function generate_paper_download_link($user) {
     return '"<a href="' . 'downloadpaper.php?id=' . $user->get_uploaded_paper()['id'] . '">' . $user->get_uploaded_paper()['title'] . '</a>"';
@@ -123,7 +125,8 @@
   <h2>Reviewer Assignment</h2>
 
   <p>
-  <?php // don't allow assignment of reviewers if everyone hasn't uploaded a paper
+  <?php
+    // don't allow assignment of reviewers if everyone hasn't uploaded a paper
     $disable_review_assignments_string = '';
     $papers_not_all_uploaded_yet = false;
     foreach ($USERINVENTORY->get_users() as $u) {
@@ -137,6 +140,10 @@
       echo "Papers have not yet been uploaded by all authors. Distribution of papers to reviewers disabled.";
     }
 
+    // also don't allow distribution if papers have already been distributed
+    if (file_exists(REVIEWER_ASSIGNMENTS_FILE)) {
+      $disable_review_assignments_string = ' disabled';
+    }
   ?>
   </p>
 

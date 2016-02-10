@@ -50,6 +50,27 @@
     return $table_string;
   }
  
+  function generate_review_retrieval_table($rev_assignments,$user_email,$user_inv) {
+
+    function generate_review_download_link($rev_id,$link_text) {
+      return '<a href="' . 'downloadreview.php?id=' . $rev_id . '">' . $link_text . '</a>';
+    }
+
+    $links_string = '';
+    $i = 1;
+    // FIXME WORK ON THIS!
+    foreach ($rev_assignments[$user_email] as $r) {
+      $authors_for_that_rev = $user_inv->get_user_by_email_address($r)->get_submitted_reviews();
+      if (isset($authors_for_that_rev[$user_email])) {
+        $links_string = $links_string . generate_review_download_link($authors_for_that_rev[$user_email],"Review $i") . "<br>\n";
+      } else {
+        $links_string = $links_string . "Review $i (not yet available)" . "<br>\n";
+      }
+      $review_id = $user_inv->get_user_by_email_address($r)->get_submitted_reviews()[$user_email];
+      $i++;
+    }
+    return $links_string;
+  }
 ?>
 
 <html>
@@ -108,7 +129,16 @@
       }
     ?>
 
+  <h2>Reviews of your paper</h2>
 
+  <?php
+    if ($PROJECTSTATE->get_reviews_available_status()) {
+      $revs = read_reviewer_assignments();
+      echo generate_review_retrieval_table($revs,$the_user->get_email_address(),$USERINVENTORY);
+    } else {
+      echo '<p>No reviews are currently available.</p>';
+    }
+  ?>
 
   <?php // USER LOGIN ERRORS
     else:

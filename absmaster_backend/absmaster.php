@@ -17,6 +17,7 @@
   */
 
   // define the backend root directory and the frontend root directories as constants here
+  // FIXME define the paths in some kind of environment file instead of hard coding them
   define("BACKEND_ROOT", "/home/chris/Documents/jobs/work_study/abstract_reviewer/absmaster/absmaster_backend");
   define("FRONTEND_ROOT", "/home/chris/Documents/jobs/work_study/abstract_reviewer/absmaster/www/absmaster");
 
