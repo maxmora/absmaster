@@ -333,12 +333,12 @@
   }
 
   //UserInventory setup
-  $userinventory = new UserInventory(USERS_FILE);
-  $userinventory->read_user_data();
+  $USERINVENTORY = new UserInventory(USERS_FILE);
+  $USERINVENTORY->read_user_data();
 
 
   //ProjectState setup
-  $projectstate = new ProjectState(PROJECT_STATE_FILE);
-  $projectstate->read_project_state_data();
+  $PROJECTSTATE = new ProjectState(PROJECT_STATE_FILE);
+  $PROJECTSTATE->read_project_state_data();
   
 

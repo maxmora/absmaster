@@ -2,7 +2,7 @@
   session_start();
   require_once "../../absmaster_backend/absmaster.php";
 
-  if ($projectstate->admin_pin_validate($_SESSION['admin_pin']) == false) {
+  if ($PROJECTSTATE->admin_pin_validate($_SESSION['admin_pin']) == false) {
     die('Access denied. You must be logged in as administrator to do that.');
   }
 
@@ -13,7 +13,7 @@
 
   // make list of users' email addresses
   $users = [];
-  foreach ($userinventory->get_users() as $u) {
+  foreach ($USERINVENTORY->get_users() as $u) {
     $users[] = $u->get_email_address();
   }
 
@@ -70,7 +70,7 @@
   <h2>Assigned Reviews</h2>
 
   <p>
-    <?php echo generate_reviewer_assignment_table($review_pairings,$userinventory); ?>
+    <?php echo generate_reviewer_assignment_table($review_pairings,$USERINVENTORY); ?>
   </p>
 
   <p>

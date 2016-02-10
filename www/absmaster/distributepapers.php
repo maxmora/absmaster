@@ -2,7 +2,7 @@
   session_start();
   require_once "../../absmaster_backend/absmaster.php";
 
-  if ($projectstate->admin_pin_validate($_SESSION['admin_pin']) == false) {
+  if ($PROJECTSTATE->admin_pin_validate($_SESSION['admin_pin']) == false) {
     die('Access denied. You must be logged in as administrator to do that.');
   }
 

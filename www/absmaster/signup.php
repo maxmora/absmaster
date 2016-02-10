@@ -3,7 +3,7 @@
 ?>
 
 <html>
-  <?php if($projectstate->get_signup_enabled_status() == true): ?>
+  <?php if($PROJECTSTATE->get_signup_enabled_status() == true): ?>
 
   <h1>Absmaster User Signup</h1>
 

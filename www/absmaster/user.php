@@ -5,7 +5,7 @@
   $login_error_free = true;
   $login_errors = [];
 
-  $the_user = $userinventory->get_user_by_email_address($_POST['email_address']);
+  $the_user = $USERINVENTORY->get_user_by_email_address($_POST['email_address']);
 
   if (empty($_POST)) {
     $login_error_free = false;
@@ -102,7 +102,7 @@
         echo "<p>\nYou have been assigned the following papers to review. Click on a title to download a paper. Use the box next to the title to upload your review for that paper.\n</p>\n";
         $revs = read_reviewer_assignments();
         $papers_for_the_user = compile_papers_for_reviewer_by_email_address($revs,$the_user->get_email_address());
-        echo "<p>\n" . generate_review_upload_table($papers_for_the_user,$userinventory,$the_user) . "\n</p>\n";
+        echo "<p>\n" . generate_review_upload_table($papers_for_the_user,$USERINVENTORY,$the_user) . "\n</p>\n";
       } else {
         echo "<p>\nNo papers are available to review yet. Please check back later.\n</p>\n";
       }

@@ -7,11 +7,11 @@
   $admin_login_errors = [];
 
   // session and/or login validation
-  if ($projectstate->admin_pin_validate($_SESSION['admin_pin'])) {
+  if ($PROJECTSTATE->admin_pin_validate($_SESSION['admin_pin'])) {
     $admin_login_error_free = true;
   } elseif (empty($_POST)) {
     $admin_login_errors[] = 'Error: You have not <a href="adminauth.html">logged in</a>.';
-  } elseif ($projectstate->admin_email_validate($_POST['email_address']) && $projectstate->admin_pin_validate($_POST['pin'])) {
+  } elseif ($PROJECTSTATE->admin_email_validate($_POST['email_address']) && $PROJECTSTATE->admin_pin_validate($_POST['pin'])) {
     $admin_login_error_free = true;
   } else {
     $admin_login_errors[] = 'Sorry, that is not a valid administrator email/PIN combination.';
@@ -116,7 +116,7 @@
   The following users are currently in the system:
 
   <p>
-  <?php echo generate_user_table($userinventory); ?>
+  <?php echo generate_user_table($USERINVENTORY); ?>
   </p>
 
 
@@ -126,7 +126,7 @@
   <?php // don't allow assignment of reviewers if everyone hasn't uploaded a paper
     $disable_review_assignments_string = '';
     $papers_not_all_uploaded_yet = false;
-    foreach ($userinventory->get_users() as $u) {
+    foreach ($USERINVENTORY->get_users() as $u) {
       if ($u->get_uploaded_paper() == false) {
         $disable_review_assignments_string = ' disabled';
         $papers_not_all_uploaded_yet = true;
@@ -151,7 +151,7 @@
   <?php
     if (file_exists(REVIEWER_ASSIGNMENTS_FILE)) {
       echo "<p>\nThe current reviewer assignments are as follows:\n</p>";
-      echo "<p>\n" . generate_reviewer_assignment_table(read_reviewer_assignments(),$userinventory) . "\n</p>";
+      echo "<p>\n" . generate_reviewer_assignment_table(read_reviewer_assignments(),$USERINVENTORY) . "\n</p>";
     }
   ?>
 
@@ -160,9 +160,9 @@
 
   <?php
     // not elegant: how many reviews are we supposed to have? check how many the first user is supposed to have * how many users we have
-    $total_expected_reviews = count(read_reviewer_assignments()[$userinventory->get_users()[0]->get_email_address()]) * count($userinventory->get_users());
+    $total_expected_reviews = count(read_reviewer_assignments()[$USERINVENTORY->get_users()[0]->get_email_address()]) * count($USERINVENTORY->get_users());
     $total_received_reviews = 0;
-    foreach ($userinventory->get_users() as $u) {
+    foreach ($USERINVENTORY->get_users() as $u) {
       $total_received_reviews += count($u->get_submitted_reviews());
     }
   ?>
@@ -181,7 +181,7 @@
   <?php
     $revs_on_string = '';
     $revs_off_string = '';
-    if ($projectstate->get_reviews_available_status()) {
+    if ($PROJECTSTATE->get_reviews_available_status()) {
       $revs_on_string = ' checked';
     } else {
       $revs_off_string = ' checked';

@@ -36,16 +36,16 @@
     $user_fields_valid = false;
     $user_creation_errors[] = 'Invalid email address.';
   }
-  if ($userinventory->user_exists_by_email_address($_POST['email_address'])) {
+  if ($USERINVENTORY->user_exists_by_email_address($_POST['email_address'])) {
     $user_fields_valid = false;
     $user_creation_errors[] = 'A user with that email address already exists.';
   }
 
   // create user and save data
   if ($user_fields_valid) {
-    $userinventory->add_user($_POST['first_name'],$_POST['last_name'],$_POST['email_address']);
-    $thenewuser = $userinventory->get_user_by_email_address($_POST['email_address']); // grabbing the new user object for use below
-    $userinventory->write_user_data();
+    $USERINVENTORY->add_user($_POST['first_name'],$_POST['last_name'],$_POST['email_address']);
+    $thenewuser = $USERINVENTORY->get_user_by_email_address($_POST['email_address']); // grabbing the new user object for use below
+    $USERINVENTORY->write_user_data();
   }
 
   if ($user_fields_valid == true):

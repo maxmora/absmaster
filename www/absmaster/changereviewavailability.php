@@ -2,12 +2,12 @@
   session_start();
   require_once "../../absmaster_backend/absmaster.php";
 
-  if ($projectstate->admin_pin_validate($_SESSION['admin_pin']) == false) {
+  if ($PROJECTSTATE->admin_pin_validate($_SESSION['admin_pin']) == false) {
     die('Access denied. You must be logged in as administrator to do that.');
   }
 
   // make bool status into equivalent strings for newly POSTed state so they can be compared in next block
-  $old_bool_rev_status = $projectstate->get_reviews_available_status();
+  $old_bool_rev_status = $PROJECTSTATE->get_reviews_available_status();
   if ($old_bool_rev_status) {
     $old_rev_status = 'enable';
   } else {
@@ -21,13 +21,13 @@
     $report_string = 'You have not changed review availability; doing nothing.';
   } else {
     if ($new_rev_status == 'enable') {
-      $projectstate->enable_reviews_available();
+      $PROJECTSTATE->enable_reviews_available();
       $report_string = 'Reviews are now available to authors.';
-      $projectstate->write_project_state_data();
+      $PROJECTSTATE->write_project_state_data();
     } elseif ($new_rev_status == 'disable') {
-      $projectstate->disable_reviews_available();
+      $PROJECTSTATE->disable_reviews_available();
       $report_string = 'Reviews are no longer available to authors.';
-      $projectstate->write_project_state_data();
+      $PROJECTSTATE->write_project_state_data();
     }
   }
 
