@@ -18,8 +18,8 @@
 
   // define the backend root directory and the frontend root directories as constants here
   // FIXME define the paths in some kind of environment file instead of hard coding them
-  define("BACKEND_ROOT", "/home/chris/Documents/jobs/work_study/abstract_reviewer/absmaster/absmaster_backend");
-  define("FRONTEND_ROOT", "/home/chris/Documents/jobs/work_study/abstract_reviewer/absmaster/www/absmaster");
+  define("BACKEND_ROOT", __DIR__);
+  define("FRONTEND_ROOT", "../www/absmaster");
 
   // some constants I'll use in here, but should refactor later to have passed down the line on creation of various objects
   // (they should probably be stored as project state properties)

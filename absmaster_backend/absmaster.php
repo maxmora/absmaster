@@ -37,4 +37,3 @@
   $PROJECTSTATE = new ProjectState(PROJECT_STATE_FILE);
   $PROJECTSTATE->read_project_state_data();
   
-

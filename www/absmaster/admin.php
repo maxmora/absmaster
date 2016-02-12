@@ -70,14 +70,17 @@
 
     function string_of_reviewers($user,$review_list,$user_inv) {
       $reviewer_string = '';
-      foreach ($review_list[$user->get_email_address()] as $r) {
-        $rev_user = $user_inv->get_user_by_email_address($r);
-        $rev_user_string = $rev_user->get_first_name() . ' ' . $rev_user->get_last_name() . ' (' . $rev_user->get_email_address() . ')';
-        // show name as download link to review if the review has been submitted
-        if (isset($rev_user->get_submitted_reviews()[$user->get_email_address()])) {
-          $rev_user_string = generate_review_download_link($rev_user->get_submitted_reviews()[$user->get_email_address()],$rev_user_string);
+      $user_email = $user->get_email_address();
+      if (isset($review_list[$user_email])) {
+        foreach ($review_list[$user->get_email_address()] as $r) {
+          $rev_user = $user_inv->get_user_by_email_address($r);
+          $rev_user_string = $rev_user->get_first_name() . ' ' . $rev_user->get_last_name() . ' (' . $rev_user->get_email_address() . ')';
+          // show name as download link to review if the review has been submitted
+          if (isset($rev_user->get_submitted_reviews()[$user->get_email_address()])) {
+            $rev_user_string = generate_review_download_link($rev_user->get_submitted_reviews()[$user->get_email_address()],$rev_user_string);
+          }
+          $reviewer_string = $reviewer_string . $rev_user_string . ', ';
         }
-        $reviewer_string = $reviewer_string . $rev_user_string . ', ';
       }
       return $reviewer_string;
     }
@@ -201,6 +204,29 @@
     <input type="submit" value="Change review availability">
   </form>
 
+  <h2>Project Settings</h2>
+
+  <?php
+    $signup_on_string = '';
+    $signup_off_string = '';
+    if ($PROJECTSTATE->get_signup_enabled_status()) {
+      $signup_on_string = ' checked';
+    } else {
+      $signup_off_string = ' checked';
+    }
+  ?>
+
+  <form action="updatesettings.php" method="post">
+    <p>Enable/disable signing up by new users (automatically disabled upon distribution of reviews):</p>
+    <input type="radio" name="signup_enablement" value="enable"<?php echo $signup_on_string;?>> Enabled
+    <input type="radio" name="signup_enablement" value="disable"<?php echo $signup_off_string;?>> Disabled
+
+    <p>Maximum number of users:</p>
+    <input type="number" name="max_users" value="<?php echo $PROJECTSTATE->get_max_users();?>">
+
+
+    <p><input type="submit" value="Update settings"></p>
+  </form>
 
 </html>
 
