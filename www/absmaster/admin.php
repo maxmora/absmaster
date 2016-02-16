@@ -1,7 +1,7 @@
 <?php 
   session_start();
-  require_once "../../absmaster_backend/absmaster.php";
-  require_once "../../absmaster_backend/reviews.php";
+  require_once "include_path.php";
+  require_once "absmaster.php";
 
   $admin_login_error_free = false;
   $admin_login_errors = [];

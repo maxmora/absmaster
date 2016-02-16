@@ -1,12 +1,11 @@
 <?php 
   session_start();
-  require_once "../../absmaster_backend/absmaster.php";
+  require_once "include_path.php";
+  require_once "absmaster.php";
 
   if ($PROJECTSTATE->admin_pin_validate($_SESSION['admin_pin']) == false) {
     die('Access denied. You must be logged in as administrator to do that.');
   }
-
-  require_once "../../absmaster_backend/reviews.php";
 
   // TODO implement gathering of these
   $excluded_reviewers = []; // when implemented, this will be a hash table of reviewer => [exclusions]

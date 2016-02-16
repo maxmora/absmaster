@@ -1,11 +1,6 @@
 <?php 
-  require_once "../../absmaster_backend/absmaster.php";
-
-  //TODO validate input on all fields before doing ANYTHING
-  //
-  // if it's not good, then simply state all that and don't create a new user!
-  // conditions include: improper email address, or existing email address that differs only by case sensitivity,
-  // and THAT ALL FIELDS ARE FILLED! (no empty fields!)
+  require_once "include_path.php";
+  require_once "absmaster.php";
 ?>
 
 <html>

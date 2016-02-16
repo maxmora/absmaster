@@ -1,7 +1,6 @@
 <?php 
-  require_once "../../absmaster_backend/absmaster.php";
-  require_once "../../absmaster_backend/reviews.php";
-
+  require_once "include_path.php";
+  require_once "absmaster.php";
 
   if (empty($_POST)) {
     die('Access denied. Please log in and upload from your user page.');
@@ -10,8 +9,6 @@
     die('You must select a file to upload. Please try again.');
   }
 
-  // TODO: 
-  //   -validate that it's a real PDF (do same way as for paper upload)
   $SUBMISSION_DIR = BACKEND_ROOT . '/reviews/';
   $the_reviewer = $USERINVENTORY->get_user_by_email_address($_POST['email_address']);
 

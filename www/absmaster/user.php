@@ -1,6 +1,6 @@
 <?php 
-  require_once "../../absmaster_backend/absmaster.php";
-  require_once "../../absmaster_backend/reviews.php";
+  require_once "include_path.php";
+  require_once "absmaster.php";
 
   $login_error_free = true;
   $login_errors = [];
@@ -58,7 +58,6 @@
 
     $links_string = '';
     $i = 1;
-    // FIXME WORK ON THIS!
     foreach ($rev_assignments[$user_email] as $r) {
       $authors_for_that_rev = $user_inv->get_user_by_email_address($r)->get_submitted_reviews();
       if (isset($authors_for_that_rev[$user_email])) {
@@ -66,7 +65,6 @@
       } else {
         $links_string = $links_string . "Review $i (not yet available)" . "<br>\n";
       }
-      $review_id = $user_inv->get_user_by_email_address($r)->get_submitted_reviews()[$user_email];
       $i++;
     }
     return $links_string;
@@ -99,6 +97,8 @@
 
   <h2>Paper/abstract upload</h2>
 
+  <p>Upload your paper below. Uploaded papers must be in PDF format.</p>
+
   <form action="upload.php" method="post" enctype="multipart/form-data">
     <input type="hidden" name="MAX_FILE_SIZE" value=5000000>
     <input type="hidden" name="email_address" value="<?php echo $the_user->get_email_address();?>">
@@ -116,6 +116,7 @@
 
     <p>
     To download paper, click on the title. To submit your review for that paper, use the box to the right of the title. Submit only one review at a time.
+    Reviews must be in PDF format.
     </p>
 
     <?php

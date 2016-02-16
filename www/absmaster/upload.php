@@ -1,5 +1,6 @@
 <?php 
-  require_once "../../absmaster_backend/absmaster.php";
+  require_once "include_path.php";
+  require_once "absmaster.php";
 
   if (empty($_POST)) {
     die('Access denied. Please log in and upload from your user page.');

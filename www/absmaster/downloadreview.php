@@ -1,5 +1,6 @@
 <?php 
-  require_once "../../absmaster_backend/absmaster.php";
+  require_once "include_path.php";
+  require_once "absmaster.php";
 
   function download_review_by_id($id) {
     if (is_numeric($id)) {
