@@ -26,11 +26,15 @@
     die('You have already uploaded a review for this paper!');
   }
 
-  $new_basename = $new_review_id . '.pdf';
-  move_uploaded_file($_FILES['uploaded_file']['tmp_name'],$SUBMISSION_DIR . $new_basename);
-
-  $USERINVENTORY->add_user_submitted_review_by_email_address($the_reviewer->get_email_address(),$author_email,$new_review_id);
-  $USERINVENTORY->write_user_data();
+  if (file_is_pdf($_FILES['uploaded_file']['tmp_name'])) {
+    $new_basename = $new_review_id . '.pdf';
+    move_uploaded_file($_FILES['uploaded_file']['tmp_name'],$SUBMISSION_DIR . $new_basename);
+    $USERINVENTORY->add_user_submitted_review_by_email_address($the_reviewer->get_email_address(),$author_email,$new_review_id);
+    $USERINVENTORY->write_user_data();
+  } else {
+    unlink($_FILES['uploaded_file']['tmp_name']);
+    die('File is not a PDF. Only PDFs can be uploaded.');
+  }
 ?>
 
 <html>

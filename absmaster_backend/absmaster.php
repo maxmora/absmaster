@@ -28,6 +28,14 @@
     file_put_contents($file,$line,FILE_APPEND);
   }
 
+  function file_is_pdf($file) {
+    if (mime_content_type($file) == 'application/pdf') {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
 
   //UserInventory setup
   $USERINVENTORY = new UserInventory(USERS_FILE);
