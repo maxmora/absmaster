@@ -7,7 +7,7 @@
   }
 
   // TODO: 
-  //   -do some validation: they entered a title, must be .pdf (preferably a real check, not just extension), not over max size
+  //   -do some validation: they entered a title
   $SUBMISSION_DIR = BACKEND_ROOT . '/submissions/';
   $the_user = $USERINVENTORY->get_user_by_email_address($_POST['email_address']);
 

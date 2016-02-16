@@ -1,10 +1,16 @@
 <?php 
   require_once "include_path.php";
   require_once "absmaster.php";
+
+  if ($PROJECTSTATE->get_signup_enabled_status() == true) {
+    die('Sorry, creation of new users for this project is disabled!');
+  }
+  if (count($USERINVENTORY->get_users()) >= $PROJECTSTATE->get_max_users()) {
+    die('Maximum users for project exceeded. Signup not allowed.');
+  }
 ?>
 
 <html>
-  <?php if($PROJECTSTATE->get_signup_enabled_status() == true): ?>
 
   <h1>Absmaster User Signup</h1>
 
@@ -21,9 +27,4 @@
     <input type="submit" value="Sign up">
   </form>
 
-  <?php else: ?>
-
-  Sorry, creation of new users for this project is disabled!
-
-  <?php endif; ?>
 </html>

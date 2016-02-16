@@ -6,6 +6,10 @@
 <html>
 
 <?php
+  if (count($USERINVENTORY->get_users()) >= $PROJECTSTATE->get_max_users()) {
+    die('Maximum users for project exceeded. Signup not allowed.');
+  }
+
   // if someone navigates to this page manually, terminate immediately.
   if (empty($_POST)) {
     echo "You cannot access this page.\n</html>";
