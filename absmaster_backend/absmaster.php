@@ -17,25 +17,15 @@
   */
 
   require_once "local_env.php";
+  require_once "global_functions.php";
   require_once "UserInventory.php";
   require_once "User.php";
   require_once "ProjectState.php";
   require_once "reviews.php";
 
-  function log_msg($file,$msg) {
-    $t = DateTime::ISO8601; // format to use for time
-    $line = date($t) . ' ' . $msg . "\n";
-    file_put_contents($file,$line,FILE_APPEND);
+  if (!file_exists(USERS_FILE) || !file_exists(PROJECT_STATE_FILE)) {
+    die("This Absmaster installation/project has not been initiated!\n");
   }
-
-  function file_is_pdf($file) {
-    if (mime_content_type($file) == 'application/pdf') {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
 
   //UserInventory setup
   $USERINVENTORY = new UserInventory(USERS_FILE);

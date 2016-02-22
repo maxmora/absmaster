@@ -81,6 +81,14 @@
       $this->_project_name = $name;
     }
 
+    public function set_admin_email($email) {
+      $this->_admin_email = $email;
+    }
+
+    public function set_admin_pin($pin) {
+      $this->_admin_pin = $pin;
+    }
+
     public function enable_signup() {
       $this->_signup_enabled = true;
     }

@@ -6,8 +6,10 @@
     die('Access denied. Please log in and upload from your user page.');
   }
 
-  // TODO: 
-  //   -do some validation: they entered a title
+  if ($_POST['paper_title'] == '') {
+    die('Please enter a title for your paper.');
+  }
+
   $SUBMISSION_DIR = BACKEND_ROOT . '/submissions/';
   $the_user = $USERINVENTORY->get_user_by_email_address($_POST['email_address']);
 

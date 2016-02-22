@@ -132,7 +132,7 @@
     // don't allow assignment of reviewers if everyone hasn't uploaded a paper
     $disable_review_assignments_string = '';
     $papers_not_all_uploaded_yet = false;
-    foreach ($USERINVENTORY->get_users() as $u) {
+    :foreach ($USERINVENTORY->get_users() as $u) {
       if ($u->get_uploaded_paper() == false) {
         $disable_review_assignments_string = ' disabled';
         $papers_not_all_uploaded_yet = true;
@@ -169,40 +169,39 @@
   <h2>Review Distribution</h2>
 
   <?php
-    // not elegant: how many reviews are we supposed to have? check how many the first user is supposed to have * how many users we have
-    $total_expected_reviews = count(read_reviewer_assignments()[$USERINVENTORY->get_users()[0]->get_email_address()]) * count($USERINVENTORY->get_users());
-    $total_received_reviews = 0;
-    foreach ($USERINVENTORY->get_users() as $u) {
-      $total_received_reviews += count($u->get_submitted_reviews());
-    }
-  ?>
-
-  <p><?php echo $total_received_reviews . ' out of ' . $total_expected_reviews;?> have been submitted so far.</p>
-
-  <p>
-    <?php
+    if (file_exists(REVIEWER_ASSIGNMENTS_FILE)) {
+      // not elegant: how many reviews are we supposed to have? check how many the first user is supposed to have * how many users we have
+      $total_expected_reviews = count(read_reviewer_assignments()[$USERINVENTORY->get_users()[0]->get_email_address()]) * count($USERINVENTORY->get_users());
+      $total_received_reviews = 0;
+      foreach ($USERINVENTORY->get_users() as $u) {
+        $total_received_reviews += count($u->get_submitted_reviews());
+      }
+     
+      echo '<p>' . $total_received_reviews . ' out of ' . $total_expected_reviews . 'have been submitted so far.</p>';
+     
       $reviews_awaited = $total_expected_reviews - $total_received_reviews;
       if ($reviews_awaited > 0) {
         echo '<b>Note: Reviews submitted after distribution is enabled (still waiting on ' . $reviews_awaited . ' more) will immediately be viewable by authors without your approval.</b>';
       }
-    ?>
-  </p>
-  
-  <?php
-    $revs_on_string = '';
-    $revs_off_string = '';
-    if ($PROJECTSTATE->get_reviews_available_status()) {
-      $revs_on_string = ' checked';
+      echo '</p>';
+
+      $revs_on_string = '';
+      $revs_off_string = '';
+      if ($PROJECTSTATE->get_reviews_available_status()) {
+        $revs_on_string = ' checked';
+      } else {
+        $revs_off_string = ' checked';
+      }
+
+      echo '<form action="changereviewavailability.php" method="post">
+          <input type="radio" name="review_availability" value="disable"' . $revs_off_string . '> Reviews NOT available to authors<br>
+          <input type="radio" name="review_availability" value="enable"' . $revs_on_string . '> Reviews available to authors<br>
+          <input type="submit" value="Change review availability">
+        </form>';
     } else {
-      $revs_off_string = ' checked';
+      echo '<p>Reviews have not yet been assigned.</p>';
     }
   ?>
-
-  <form action="changereviewavailability.php" method="post">
-    <input type="radio" name="review_availability" value="disable"<?php echo $revs_off_string;?>> Reviews NOT available to authors<br>
-    <input type="radio" name="review_availability" value="enable"<?php echo $revs_on_string;?>> Reviews available to authors<br>
-    <input type="submit" value="Change review availability">
-  </form>
 
   <h2>Project Settings</h2>
 

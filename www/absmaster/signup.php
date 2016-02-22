@@ -2,7 +2,7 @@
   require_once "include_path.php";
   require_once "absmaster.php";
 
-  if ($PROJECTSTATE->get_signup_enabled_status() == true) {
+  if ($PROJECTSTATE->get_signup_enabled_status() == false) {
     die('Sorry, creation of new users for this project is disabled!');
   }
   if (count($USERINVENTORY->get_users()) >= $PROJECTSTATE->get_max_users()) {
