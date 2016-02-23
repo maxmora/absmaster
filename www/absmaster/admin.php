@@ -144,6 +144,9 @@
 
     if ($papers_not_all_uploaded_yet) {
       echo "Papers have not yet been uploaded by all authors. Distribution of papers to reviewers disabled.";
+    } elseif (count($USERINVENTORY->get_users()) == 0) {
+      echo "There are no users yet; distribution of papers to reviews disabled.";
+      $disable_review_assignments_string = ' disabled';
     }
 
     // also don't allow distribution if papers have already been distributed
@@ -180,7 +183,7 @@
         $total_received_reviews += count($u->get_submitted_reviews());
       }
      
-      echo '<p>' . $total_received_reviews . ' out of ' . $total_expected_reviews . 'have been submitted so far.</p>';
+      echo '<p>' . $total_received_reviews . ' out of ' . $total_expected_reviews . ' have been submitted so far.</p>';
      
       $reviews_awaited = $total_expected_reviews - $total_received_reviews;
       if ($reviews_awaited > 0) {

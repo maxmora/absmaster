@@ -23,7 +23,7 @@
   }
 
 
-  // TODO this whole thing should only be operating on people who have submitted reviews; check for this when having admin assign reviewers?
+  // TODO this whole thing should only be operating on people who have submitted papers; check for this when having admin assign reviewers?
   $review_pairings = assign_reviewers($users,$reviews_per_user,$excluded_reviewers);
 
 
