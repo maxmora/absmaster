@@ -6,23 +6,23 @@
   $admin_login_error_free = false;
   $admin_login_errors = [];
 
-  // session and/or login validation
-  if (isset($_SESSION['admin_pin']) || $PROJECTSTATE->admin_pin_validate($_SESSION['admin_pin'])) {
+  // if this is an admin log in, make sure the credentials are right and save admin_pin to session
+  if (isset($_POST['pin'])) {
+    if ($PROJECTSTATE->admin_email_validate($_POST['email_address']) && $PROJECTSTATE->admin_pin_validate($_POST['pin'])) {
+      $admin_login_error_free = true;
+      $_SESSION['admin_pin'] = $_POST['pin'];
+    } else {
+    $admin_login_errors[] = 'Sorry, that is not a valid administrator email/PIN combination.';
+    }
+  // if the user has navigated here, see if they are already logged in in session
+  } elseif (isset($_SESSION['admin_pin']) || $PROJECTSTATE->admin_pin_validate($_SESSION['admin_pin'])) {
     $admin_login_error_free = true;
   } elseif (empty($_POST)) {
     $admin_login_errors[] = 'Error: You have not <a href="adminauth.html">logged in</a>.';
-  } elseif ($PROJECTSTATE->admin_email_validate($_POST['email_address']) && $PROJECTSTATE->admin_pin_validate($_POST['pin'])) {
-    $admin_login_error_free = true;
-  } else {
-    $admin_login_errors[] = 'Sorry, that is not a valid administrator email/PIN combination.';
   }
 
   if ($admin_login_error_free == true):
 
-  // login is successful and we've just gotten a new pin from logging in, save this to $_SESSION
-  if (isset($_POST['pin'])) {
-    $_SESSION['admin_pin'] = $_POST['pin'];
-  }
 
   function generate_paper_download_link($user) {
     return '"<a href="' . 'downloadpaper.php?id=' . $user->get_uploaded_paper()['id'] . '">' . $user->get_uploaded_paper()['title'] . '</a>"';
