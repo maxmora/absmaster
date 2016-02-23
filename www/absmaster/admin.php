@@ -118,11 +118,14 @@
 
   <h2>Users</h2>
 
-  The following users are currently in the system:
-
-  <p>
-  <?php echo generate_user_table($USERINVENTORY); ?>
-  </p>
+  <?php
+    if (count($USERINVENTORY->get_users()) > 0) {
+      echo 'The following users are currently in the system:';
+      echo '<p>' . generate_user_table($USERINVENTORY) . '</p>';
+    } else {
+      echo '<p>No users have signed up yet.<p>';
+    }
+  ?>
 
 
   <h2>Reviewer Assignment</h2>
@@ -132,7 +135,7 @@
     // don't allow assignment of reviewers if everyone hasn't uploaded a paper
     $disable_review_assignments_string = '';
     $papers_not_all_uploaded_yet = false;
-    :foreach ($USERINVENTORY->get_users() as $u) {
+    foreach ($USERINVENTORY->get_users() as $u) {
       if ($u->get_uploaded_paper() == false) {
         $disable_review_assignments_string = ' disabled';
         $papers_not_all_uploaded_yet = true;
