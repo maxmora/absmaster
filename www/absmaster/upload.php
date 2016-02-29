@@ -10,12 +10,22 @@
     die('Please enter a title for your paper.');
   }
 
+  if (file_exists(REVIEWER_ASSIGNMENTS_FILE)) {
+    die('You cannot resubmit at this time.');
+  }
+
   $SUBMISSION_DIR = BACKEND_ROOT . '/submissions/';
   $the_user = $USERINVENTORY->get_user_by_email_address($_POST['email_address']);
 
-  // generate unique id; should probably be encapsulated elsewhere
-  $used_ids = $USERINVENTORY->get_used_paper_ids();
-  $new_id = max($used_ids) + 1;
+  $user_uploaded_paper = $the_user->get_uploaded_paper();
+  if (isset($user_uploaded_paper)) {
+    // keep paper id the same if this a re-upload so we just overwrite the file
+    $new_id = $user_uploaded_paper['id'];
+  } else {
+    // if it's a new upload, generate unique id; should probably be encapsulated elsewhere
+    $used_ids = $USERINVENTORY->get_used_paper_ids();
+    $new_id = max($used_ids) + 1;
+  }
 
   $new_basename = $new_id . '.pdf';
   $new_title = $_POST['paper_title'];
@@ -33,5 +43,5 @@
 <html>
   <h1>File upload successful!</h1>
 
-  <p>Your file "<?php echo $_POST['paper_title'];?>" has successfully been uploaded.</p>
+  <p>Your submission "<?php echo $_POST['paper_title'];?>" has successfully been uploaded.</p>
 </html>

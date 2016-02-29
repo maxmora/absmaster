@@ -87,7 +87,9 @@
       $upload = $the_user->get_uploaded_paper();
       if ($upload) {
         echo 'You have uploaded a paper titled "' . generate_paper_download_link($the_user) . '".';
-        $paper_submission_disabled_string = ' disabled'; // so users can't submit if they already have; this should probably be validated on the backend as well
+        if (file_exists(REVIEWER_ASSIGNMENTS_FILE) {
+          $paper_submission_disabled_string = ' disabled'; // users can't submit again if reviews have been assigned
+        }
       } else {
         echo 'You have not uploaded a paper yet.';
         $paper_submission_disabled_string = '';
