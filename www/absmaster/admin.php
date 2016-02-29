@@ -15,7 +15,7 @@
     $admin_login_errors[] = 'Sorry, that is not a valid administrator email/PIN combination.';
     }
   // if the user has navigated here, see if they are already logged in in session
-  } elseif (isset($_SESSION['admin_pin']) || $PROJECTSTATE->admin_pin_validate($_SESSION['admin_pin'])) {
+  } elseif (isset($_SESSION['admin_pin']) && $PROJECTSTATE->admin_pin_validate($_SESSION['admin_pin'])) {
     $admin_login_error_free = true;
   } elseif (empty($_POST)) {
     $admin_login_errors[] = 'Error: You have not <a href="adminauth.html">logged in</a>.';
@@ -26,6 +26,10 @@
 
   function generate_paper_download_link($user) {
     return '"<a href="' . 'downloadpaper.php?id=' . $user->get_uploaded_paper()['id'] . '">' . $user->get_uploaded_paper()['title'] . '</a>"';
+  }
+
+  function generate_batch_paper_download_link() {
+    return '<a href="downloadpaper.php?batchdownload=true">Download all papers as a single ZIP file</a>';
   }
 
   function generate_review_download_link($rev_id,$link_text) {
@@ -121,7 +125,8 @@
   <?php
     if (count($USERINVENTORY->get_users()) > 0) {
       echo 'The following users are currently in the system:';
-      echo '<p>' . generate_user_table($USERINVENTORY) . '</p>';
+      echo '<p>' . generate_user_table($USERINVENTORY) . '</p>' . "\n";
+      echo '<p>' . generate_batch_paper_download_link() . '</p>' . "\n";
     } else {
       echo '<p>No users have signed up yet.<p>';
     }
