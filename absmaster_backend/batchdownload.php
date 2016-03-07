@@ -57,8 +57,27 @@
     return $staged_dir;
   }
 
-  function stage_batch_review_download() {
-    // TODO implement
+  function stage_batch_review_download($user_inv,$review_dir) {
+    // make unique name for temp staging directory
+    $staged_dir = sys_get_temp_dir() . '/' . uniqid('php_');
+    mkdir($staged_dir);
+
+    // for each reviewer, make $first_name . $last_name "_for_" $author_f_name . $author_l_name . ".pdf" in staging dir
+    foreach ($user_inv->get_users() as $reviewer) {
+      $revs = $reviewer->get_submitted_reviews();
+      if (isset($revs)) {
+        foreach ($revs as $author_email => $rev_id) {
+          $author = $user_inv->get_user_by_email_address($author_email);
+          
+          $uploaded_review_file = $review_dir . '/' . $rev_id . '.pdf';
+          $new_file_name = $staged_dir . '/' . $reviewer->get_first_name() . $reviewer->get_last_name() . '_for_'
+                    . $author->get_first_name() . $author->get_last_name() . $rev_id . '.pdf';
+          copy($uploaded_review_file,$new_file_name);
+        }
+      }
+    }
+    
+    return $staged_dir;
   }
 
   function cleanup_and_rm_temp_dir($dir) {

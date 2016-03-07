@@ -36,6 +36,10 @@
     return '<a href="' . 'downloadreview.php?id=' . $rev_id . '">' . $link_text . '</a>';
   }
 
+  function generate_batch_review_download_link() {
+    return '<a href="downloadreview.php?batchdownload=true">Download all reviews as a single ZIP file</a>';
+  }
+
   function generate_user_table($user_inv) {
     $users = $user_inv->get_users();
     $table_string = '';
@@ -173,6 +177,7 @@
     if (file_exists(REVIEWER_ASSIGNMENTS_FILE)) {
       echo "<p>\nThe current reviewer assignments are as follows:\n</p>";
       echo "<p>\n" . generate_reviewer_assignment_table(read_reviewer_assignments(),$USERINVENTORY) . "\n</p>";
+      echo '<p>' . generate_batch_review_download_link() . '</p>' . "\n";
     }
   ?>
 
