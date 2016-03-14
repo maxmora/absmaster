@@ -144,18 +144,20 @@
     // don't allow assignment of reviewers if everyone hasn't uploaded a paper
     $disable_review_assignments_string = '';
     $papers_not_all_uploaded_yet = false;
-    foreach ($USERINVENTORY->get_users() as $u) {
-      if ($u->get_uploaded_paper() == false) {
-        $disable_review_assignments_string = ' disabled';
-        $papers_not_all_uploaded_yet = true;
-      }
-    }
 
-    if ($papers_not_all_uploaded_yet) {
-      echo "Papers have not yet been uploaded by all authors. Distribution of papers to reviewers disabled.";
-    } elseif (count($USERINVENTORY->get_users()) == 0) {
+    if (count($USERINVENTORY->get_users()) == 0) {
       echo "There are no users yet; distribution of papers to reviews disabled.";
       $disable_review_assignments_string = ' disabled';
+    } else {
+      foreach ($USERINVENTORY->get_users() as $u) {
+        if ($u->get_uploaded_paper() == false) {
+          $disable_review_assignments_string = ' disabled';
+          $papers_not_all_uploaded_yet = true;
+        }
+      }
+      if ($papers_not_all_uploaded_yet) {
+        echo "Papers have not yet been uploaded by all authors. Distribution of papers to reviewers disabled.";
+      }
     }
 
     // also don't allow distribution if papers have already been distributed
@@ -245,6 +247,13 @@
 
 </html>
 
+  <h2>Clear Project Data</h2>
+
+  <p><b>Note: You will NOT be prompted before data is deleted and data cannot be recovered! It is recommended that you batch download any papers and/or reviews before clearing!</b></p>
+
+  <p><a href="adminaction.php?action=clearreviews">Delete all reviews</a> (along with review assignments)</p>
+  <p><a href="adminaction.php?action=clearpapers">Delete all uploaded papers</a> (along with all reviews for them)</p> 
+  <p><a href="adminaction.php?action=clearusers">Delete all users and user data</a> (along with all their reviews and papers)</p> 
 
 
 <?php // messages printed if login failed

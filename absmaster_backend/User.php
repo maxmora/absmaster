@@ -31,7 +31,7 @@
       $this->_email_address = $email_address;
       $this->_pin = $pin;
       $this->_uploaded_paper = $uploaded_paper;
-      $this->_submitted_reviews= $submitted_reviews;
+      $this->_submitted_reviews = $submitted_reviews;
     }
 
     public function get_first_name() {
@@ -61,6 +61,10 @@
     public function add_submitted_review($author_email,$review_id) {
       $this->_submitted_reviews[$author_email] = $review_id;
     }
+
+    public function clear_submitted_reviews() {
+      $this->_submitted_reviews = [];
+    }
     
     public function arrayify_user() {
       $arr = [];
@@ -76,6 +80,9 @@
     public function set_uploaded_paper($id,$title) {
       $this->_uploaded_paper = ['id'=>$id, 'title'=>$title];
     }
-  }
 
+    public function clear_uploaded_paper() {
+      $this->_uploaded_paper = null;
+    }
+  }
 

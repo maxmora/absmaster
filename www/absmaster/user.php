@@ -87,7 +87,7 @@
       $upload = $the_user->get_uploaded_paper();
       if ($upload) {
         echo 'You have uploaded a paper titled "' . generate_paper_download_link($the_user) . '".';
-        if (file_exists(REVIEWER_ASSIGNMENTS_FILE) {
+        if (file_exists(REVIEWER_ASSIGNMENTS_FILE)) {
           $paper_submission_disabled_string = ' disabled'; // users can't submit again if reviews have been assigned
         }
       } else {

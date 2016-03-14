@@ -132,6 +132,49 @@
       file_put_contents($this->_users_file,$this->_jsonify_users());
       log_msg(USER_LOG,"User inventory data written to file \"$this->_users_file\"");
     }
+
+    public function clear_all_reviews() {
+      foreach ($this->_users as $u) {
+        $submitted_reviews = $u->get_submitted_reviews();
+        if (isset($submitted_reviews)) {
+          foreach ($submitted_reviews as $reviewer => $rev_id) {
+            unlink(BACKEND_ROOT . '/reviews/' . $rev_id . '.pdf');
+          }
+        }
+        $u->clear_submitted_reviews();
+      }
+      if (file_exists(REVIEWER_ASSIGNMENTS_FILE)) {
+        unlink(REVIEWER_ASSIGNMENTS_FILE);
+      }
+      $this->write_user_data();
+    }
+
+    public function clear_all_papers() {
+      $this->clear_all_reviews();
+      foreach ($this->_users as $u) {
+        $paper = $u->get_uploaded_paper();
+        if (isset($paper)) {
+          $paper_id = $paper['id'];
+          unlink(BACKEND_ROOT . '/submissions/' . $paper_id . '.pdf');
+        }
+        $u->clear_uploaded_paper();
+      }
+      $this->write_user_data();
+    }
+
+    public function clear_all_users() {
+      $this->clear_all_papers();
+      // keep each email address first, to avoid deleting from an array as we walk through it
+      $emails = [];
+      foreach ($this->_users as $u) {
+        $emails[] = $u->get_email_address();
+      }
+      // now walk through those email addresses and remove users by them
+      foreach ($emails as $user_email) {
+        $this->remove_user($user_email);
+      }
+      $this->write_user_data();
+    }
     
     // TODO have this be a sensibly pretty-printed version so that the resulting file can be easily-ish human read?
     private function _jsonify_users() {

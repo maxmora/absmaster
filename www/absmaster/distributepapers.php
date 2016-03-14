@@ -23,5 +23,9 @@
     Papers have been distributed for review; reviewers can now log in and download their papers.
   </p>
 
+  <p>
+   <a href="admin.php">Return to admin page</a>
+  </p>
+
 
 </html>
