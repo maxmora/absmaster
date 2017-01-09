@@ -15,6 +15,9 @@
     $login_error_free = false;
   }
 
+  session_start();
+  $_SESSION['user_email'] = $_POST['email_address'];
+
   function generate_paper_download_link($user) {
     return '<a href="' . 'downloadpaper.php?id=' . $user->get_uploaded_paper()['id'] . '">' . $user->get_uploaded_paper()['title'] . '</a>';
   }
