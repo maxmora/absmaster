@@ -49,6 +49,9 @@
 
   if ($user_fields_valid == true):
 ?> 
+  <script type="text/javascript">
+    alert("Your new account has been created; please do not forget to save your login information!");
+  </script>
 
   You have been added as a new user!
 
